@@ -6,13 +6,13 @@ import { getAnalytics } from "firebase/analytics";  // Import for Analytics (if 
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBQ390k6Ra1HWpLEONVQouNOkd7KfLK648",
-  authDomain: "uday-online-classes.firebaseapp.com",
-  projectId: "uday-online-classes",
-  storageBucket: "uday-online-classes.appspot.com",
-  messagingSenderId: "697730371746",
-  appId: "1:697730371746:web:c96c427384eb58f0ec47fb",
-  measurementId: "G-R74WDJ1QCS",
+  apiKey: "AIzaSyCXfDDWug4MFlTKQNHiRSqQ-8uPgaI2c4w",
+  authDomain: "tap-education.firebaseapp.com",
+  projectId: "tap-education",
+  storageBucket: "tap-education.firebasestorage.app",
+  messagingSenderId: "974393163915",
+  appId: "1:974393163915:web:1535471b36f5cb99df548e",
+  measurementId: "G-0Z34XE1X9P"
 };
 
 // Initialize Firebase
