@@ -25,9 +25,9 @@ const HomeworkSend = () => {
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "uday-oc");
+    formData.append("upload_preset", "tap-edu");
 
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dqubwzm17/upload`;
+    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dkzczonkz/upload`;
     const response = await axios.post(cloudinaryUrl, formData);
     return response.data.secure_url;
   };

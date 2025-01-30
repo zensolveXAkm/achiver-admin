@@ -4,8 +4,8 @@ import { collection, addDoc } from "firebase/firestore";
 import axios from "axios";
 
 const cloudinaryConfig = {
-  cloudName: "dqubwzm17",
-  uploadPreset: "uday-oc",
+  cloudName: "dkzczonkz",
+  uploadPreset: "tap-edu",
 };
 
 const classOptions = [

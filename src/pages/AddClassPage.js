@@ -24,10 +24,10 @@ const AddClassPage = () => {
   const uploadThumbnail = async () => {
     const formData = new FormData();
     formData.append("file", thumbnail);
-    formData.append("upload_preset", "uday-oc");
+    formData.append("upload_preset", "tap-edu");
     try {
       const response = await fetch(
-        "https://api.cloudinary.com/v1_1/dqubwzm17/image/upload",
+        "https://api.cloudinary.com/v1_1/dkzczonkz/image/upload",
         {
           method: "POST",
           body: formData,
