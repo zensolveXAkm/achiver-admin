@@ -3,20 +3,31 @@ import { db } from "../firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const QuizListPage = () => {
-  const [quizzes, setQuizzes] = useState([]);
+  const [quizzesByTopic, setQuizzesByTopic] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch quizzes from Firestore
+  // Fetch quizzes from Firestore and group by topic
   useEffect(() => {
     const fetchQuizzes = async () => {
       setIsLoading(true);
       try {
         const querySnapshot = await getDocs(collection(db, "quizzes"));
-        const fetchedQuizzes = querySnapshot.docs.map((doc) => ({
+        const quizzes = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setQuizzes(fetchedQuizzes);
+
+        // Group quizzes by topic
+        const groupedData = quizzes.reduce((acc, quiz) => {
+          const topicKey = `${quiz.class} - ${quiz.topic}`;
+          if (!acc[topicKey]) {
+            acc[topicKey] = [];
+          }
+          acc[topicKey].push(quiz);
+          return acc;
+        }, {});
+
+        setQuizzesByTopic(groupedData);
       } catch (error) {
         alert("Error fetching quizzes: " + error.message);
       } finally {
@@ -27,14 +38,38 @@ const QuizListPage = () => {
     fetchQuizzes();
   }, []);
 
-  // Delete a quiz from Firestore
-  const handleDeleteQuiz = async (quizId) => {
+  // Delete an individual quiz
+  const handleDeleteQuiz = async (topicKey, quizId) => {
     try {
       await deleteDoc(doc(db, "quizzes", quizId));
-      setQuizzes((prev) => prev.filter((quiz) => quiz.id !== quizId));
+      setQuizzesByTopic((prev) => {
+        const updatedTopicQuizzes = prev[topicKey].filter((quiz) => quiz.id !== quizId);
+        if (updatedTopicQuizzes.length === 0) {
+          const { [topicKey]: _, ...remainingTopics } = prev;
+          return remainingTopics;
+        }
+        return { ...prev, [topicKey]: updatedTopicQuizzes };
+      });
       alert("Quiz deleted successfully!");
     } catch (error) {
       alert("Error deleting quiz: " + error.message);
+    }
+  };
+
+  // Delete an entire topic
+  const handleDeleteTopic = async (topicKey) => {
+    try {
+      const quizzes = quizzesByTopic[topicKey];
+      for (const quiz of quizzes) {
+        await deleteDoc(doc(db, "quizzes", quiz.id));
+      }
+      setQuizzesByTopic((prev) => {
+        const { [topicKey]: _, ...remainingTopics } = prev;
+        return remainingTopics;
+      });
+      alert("Topic and all its quizzes deleted successfully!");
+    } catch (error) {
+      alert("Error deleting topic: " + error.message);
     }
   };
 
@@ -43,33 +78,49 @@ const QuizListPage = () => {
       <h2 className="text-2xl font-bold mb-6 text-blue-600">Quiz List</h2>
       {isLoading ? (
         <p>Loading quizzes...</p>
-      ) : quizzes.length > 0 ? (
-        <div className="space-y-6">
-          {quizzes.map((quiz) => (
-            <div key={quiz.id} className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-semibold mb-4 text-blue-700">
-                {`Topic: ${quiz.topic} | Class: ${quiz.class}`}
+      ) : Object.keys(quizzesByTopic).length > 0 ? (
+        <div className="space-y-8">
+          {Object.keys(quizzesByTopic).map((topicKey) => (
+            <div key={topicKey} className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-lg font-bold text-blue-700 mb-4">
+                {`Topic: ${topicKey}`}
               </h3>
-              <p>
-                <strong>Question:</strong> {quiz.question}
-              </p>
-              <p>
-                <strong>Options:</strong> 
-                A) {quiz.options[0]}, B) {quiz.options[1]}, 
-                C) {quiz.options[2]}, D) {quiz.options[3]}
-              </p>
-              <p>
-                <strong>Correct Option:</strong> {quiz.correctOption}
-              </p>
-              <p>
-                <strong>Time Per Question:</strong> {quiz.timePerQuestion} seconds
-              </p>
               <button
-                onClick={() => handleDeleteQuiz(quiz.id)}
-                className="mt-4 bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600"
+                onClick={() => handleDeleteTopic(topicKey)}
+                className="bg-red-600 text-white py-1 px-4 rounded mb-4"
               >
-                Delete Quiz
+                Delete Entire Topic
               </button>
+              <div className="space-y-4">
+                {quizzesByTopic[topicKey].map((quiz) => (
+                  <div
+                    key={quiz.id}
+                    className="border p-4 rounded-lg flex justify-between items-center"
+                  >
+                    <div>
+                      <p>
+                        <strong>Q:</strong> {quiz.question}
+                      </p>
+                      <p>
+                        <strong>Options:</strong> A) {quiz.options[0]}, B) {quiz.options[1]}, 
+                        C) {quiz.options[2]}, D) {quiz.options[3]}
+                      </p>
+                      <p>
+                        <strong>Correct Option:</strong> {quiz.correctOption}
+                      </p>
+                      <p>
+                        <strong>Time Per Question:</strong> {quiz.timePerQuestion} seconds
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteQuiz(topicKey, quiz.id)}
+                      className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
+                    >
+                      Delete Quiz
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
