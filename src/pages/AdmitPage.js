@@ -33,7 +33,6 @@ const AdmitPage = () => {
         profilePhoto: state.profilePhoto,
         fatherName: state.fatherName,
         motherName: state.motherName,
-        aadharCardLink: state.aadharCardLink,
       });
 
       alert("Student admitted successfully!");
@@ -77,12 +76,6 @@ const AdmitPage = () => {
           <label>Profile Photo Link: </label>
           <a href={state.profilePhoto} target="_blank" rel="noopener noreferrer">
             View Photo
-          </a>
-        </div>
-        <div className="mb-2">
-          <label>Aadhar Card Link: </label>
-          <a href={state.aadharCardLink} target="_blank" rel="noopener noreferrer">
-            View Aadhar
           </a>
         </div>
 
