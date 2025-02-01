@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 
 const classOptions = [
-  "VIII", "IX", "X", "XI", "XII", "COMPETITIVE EXAM", "GENERAL"
+  "VI", "VII", "VIII", "IX", "X", "XI", "XII", "COMPETITIVE EXAM", "GENERAL"
 ];
 
 const CoursesList = () => {
@@ -11,6 +11,19 @@ const CoursesList = () => {
   const [search, setSearch] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [updatedTopic, setUpdatedTopic] = useState("");
+  const [updatedDescription, setUpdatedDescription] = useState("");
+  const [updatedClass, setUpdatedClass] = useState("");
+  const [updatedPrice, setUpdatedPrice] = useState("");
+  const [updatedCourseLink, setUpdatedCourseLink] = useState("");
+  const [updatedAuthor, setUpdatedAuthor] = useState("");
+  const [updatedDuration, setUpdatedDuration] = useState("");
+  const [updatedBestFor, setUpdatedBestFor] = useState("");
+  const [updatedSubject, setUpdatedSubject] = useState("");
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -45,6 +58,61 @@ const CoursesList = () => {
       alert("Course deleted successfully!");
     } catch (error) {
       alert("Error deleting course: " + error.message);
+    }
+  };
+
+  const handleEdit = (course) => {
+    setEditingCourse(course);
+    setUpdatedTopic(course.topic);
+    setUpdatedDescription(course.description);
+    setUpdatedClass(course.classEnrollingFor);
+    setUpdatedPrice(course.price);
+    setUpdatedCourseLink(course.courseLink);
+    setUpdatedAuthor(course.author);
+    setUpdatedDuration(course.duration);
+    setUpdatedBestFor(course.bestFor);
+    setUpdatedSubject(course.subject);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdate = async () => {
+    if (editingCourse) {
+      try {
+        const courseRef = doc(db, "courses", editingCourse.id);
+        await updateDoc(courseRef, {
+          topic: updatedTopic,
+          description: updatedDescription,
+          classEnrollingFor: updatedClass,
+          price: updatedPrice,
+          courseLink: updatedCourseLink,
+          author: updatedAuthor,
+          duration: updatedDuration,
+          bestFor: updatedBestFor,
+          subject: updatedSubject,
+        });
+        alert("Course updated successfully!");
+        setIsModalOpen(false);
+        setCourses((prevCourses) =>
+          prevCourses.map((course) =>
+            course.id === editingCourse.id
+              ? {
+                  ...course,
+                  topic: updatedTopic,
+                  description: updatedDescription,
+                  classEnrollingFor: updatedClass,
+                  price: updatedPrice,
+                  courseLink: updatedCourseLink,
+                  author: updatedAuthor,
+                  duration: updatedDuration,
+                  bestFor: updatedBestFor,
+                  subject: updatedSubject,
+                }
+              : course
+          )
+        );
+      } catch (error) {
+        alert("Error updating course: " + error.message);
+      }
     }
   };
 
@@ -86,18 +154,120 @@ const CoursesList = () => {
                 <p className="text-sm text-gray-600">{course.description}</p>
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-sm text-gray-700">{course.classEnrollingFor}</span>
-                  <button
-                    onClick={() => handleDelete(course.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Delete
-                  </button>
+                  <div className="space-x-2">
+                    <button
+                      onClick={() => handleEdit(course)}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(course.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
           ) : (
             <div className="text-center text-lg text-gray-500">No courses found</div>
           )}
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h3 className="text-xl font-semibold mb-4">Edit Course</h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Topic</label>
+              <input
+                type="text"
+                value={updatedTopic}
+                onChange={(e) => setUpdatedTopic(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Description</label>
+              <textarea
+                value={updatedDescription}
+                onChange={(e) => setUpdatedDescription(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Price</label>
+              <input
+                type="number"
+                value={updatedPrice}
+                onChange={(e) => setUpdatedPrice(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Course Link</label>
+              <input
+                type="text"
+                value={updatedCourseLink}
+                onChange={(e) => setUpdatedCourseLink(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Author</label>
+              <input
+                type="text"
+                value={updatedAuthor}
+                onChange={(e) => setUpdatedAuthor(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Duration</label>
+              <input
+                type="text"
+                value={updatedDuration}
+                onChange={(e) => setUpdatedDuration(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Best For</label>
+              <input
+                type="text"
+                value={updatedBestFor}
+                onChange={(e) => setUpdatedBestFor(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Subject</label>
+              <input
+                type="text"
+                value={updatedSubject}
+                onChange={(e) => setUpdatedSubject(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Update
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
