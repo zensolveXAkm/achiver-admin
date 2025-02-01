@@ -12,7 +12,8 @@ const UploadPage = () => {
     description: "",
     attachment: null,
     thumbnail: null,
-    class: "", // Added class field
+    class: "",
+    subject: "", // New field for subject
   });
   const [uploading, setUploading] = useState(false);
 
@@ -75,7 +76,8 @@ const UploadPage = () => {
         description: "",
         attachment: null,
         thumbnail: null,
-        class: "", // Reset class field
+        class: "",
+        subject: "", // Reset subject field
       });
     } catch (error) {
       console.error("Error uploading course:", error);
@@ -154,7 +156,7 @@ const UploadPage = () => {
             className="border p-2 w-full rounded mb-4"
             required
           >
-                       <option value="">Select a class</option>
+            <option value="">Select a class</option>
             <option value="VI">VI</option>
             <option value="VII">VII</option>
             <option value="VIII">VIII</option>
@@ -164,7 +166,26 @@ const UploadPage = () => {
             <option value="XII">XII</option>
             <option value="COMPETITIVE EXAM">Competitive Exam</option>
             <option value="GENERAL">GENERAL</option>
+          </select>
+        </div>
 
+        {/* Subject Dropdown */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium">Subject</label>
+          <select
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            className="border p-2 w-full rounded mb-4"
+            required
+          >
+            <option value="">Select a subject</option>
+            <option value="Science">Science</option>
+            <option value="Maths">Maths</option>
+            <option value="Social Science">Social Science</option>
+            <option value="Hindi">Hindi</option>
+            <option value="English">English</option>
+            <option value="Computer">Computer</option>
           </select>
         </div>
 
