@@ -6,6 +6,7 @@ const BulkQuizForm = () => {
   const [formData, setFormData] = useState({
     topic: "",
     class: "",
+    subject: "", // New field for subject
     timePerQuestion: 30, // Default time per question in seconds
     jsonScript: "", // Store the JSON input
   });
@@ -24,10 +25,10 @@ const BulkQuizForm = () => {
   // Handle bulk quiz upload from JSON script
   const handleUpload = async (e) => {
     e.preventDefault();
-    const { topic, class: className, jsonScript, timePerQuestion } = formData;
+    const { topic, class: className, subject, jsonScript, timePerQuestion } = formData;
 
     // Validate inputs
-    if (!topic || !className || !jsonScript) {
+    if (!topic || !className || !subject || !jsonScript) {
       setMessage("Please fill in all fields and provide the JSON script.");
       return;
     }
@@ -41,7 +42,7 @@ const BulkQuizForm = () => {
         return;
       }
 
-      // Upload each question under the topic and class
+      // Upload each question under the topic, class, and subject
       for (const question of questionsData) {
         const { questionText, options, correctOption } = question;
 
@@ -53,6 +54,7 @@ const BulkQuizForm = () => {
         const quizData = {
           topic,
           class: className,
+          subject, // Include subject in Firestore data
           question: questionText,
           options,
           correctOption,
@@ -67,6 +69,7 @@ const BulkQuizForm = () => {
       setFormData({
         topic: "",
         class: "",
+        subject: "", // Reset subject field
         timePerQuestion: 30,
         jsonScript: "",
       });
@@ -103,20 +106,33 @@ const BulkQuizForm = () => {
         required
       >
         <option value="">Select a class</option>
+        <option value="VI">VI</option>
+        <option value="VII">VII</option>
         <option value="VIII">VIII</option>
         <option value="IX">IX</option>
         <option value="X">X</option>
         <option value="XI">XI</option>
         <option value="XII">XII</option>
-        <option value="UPSC">UPSC</option>
-        <option value="SSC">SSC</option>
-        <option value="BANKING">BANKING</option>
-        <option value="CLAT">CLAT</option>
-        <option value="CAT">CAT</option>
-        <option value="MAT">MAT</option>
-        <option value="XAT">XAT</option>
-        <option value="CUET">CUET</option>
-        <option value="GENERAL">General</option>
+        <option value="COMPETITIVE EXAM">Competitive Exam</option>
+        <option value="GENERAL">GENERAL</option>
+      </select>
+
+      {/* Subject */}
+      <label className="block mb-2 font-semibold text-gray-700">Subject</label>
+      <select
+        name="subject"
+        value={formData.subject}
+        onChange={handleChange}
+        className="border p-2 w-full rounded mb-4"
+        required
+      >
+        <option value="">Select a subject</option>
+        <option value="Science">Science</option>
+        <option value="Maths">Maths</option>
+        <option value="Social Science">Social Science</option>
+        <option value="Hindi">Hindi</option>
+        <option value="English">English</option>
+        <option value="Computer">Computer</option>
       </select>
 
       {/* Time per question */}

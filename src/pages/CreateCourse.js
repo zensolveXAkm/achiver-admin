@@ -9,7 +9,11 @@ const cloudinaryConfig = {
 };
 
 const classOptions = [
-  "VIII", "IX", "X", "XI", "XII", "UPSC", "SSC", "BANKING", "CLAT", "CAT", "MAT", "XAT", "CUET", "GENERAL"
+  "VI", "VII", "VIII", "IX", "X", "XI", "XII", "COMPETITIVE EXAM", "GENERAL"
+];
+
+const subjectOptions = [
+  "Science", "Maths", "Social Science", "Hindi", "English", "Computer"
 ];
 
 const CreateCourse = () => {
@@ -22,6 +26,7 @@ const CreateCourse = () => {
     duration: "",
     bestFor: "",
     classEnrollingFor: "",
+    subject: "", // New field for subject
   });
   const [isFree, setIsFree] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
@@ -66,6 +71,7 @@ const CreateCourse = () => {
         duration: "",
         bestFor: "",
         classEnrollingFor: "",
+        subject: "", // Reset subject field
       });
       setThumbnail(null);
       setIsFree(false);
@@ -139,6 +145,25 @@ const CreateCourse = () => {
             {classOptions.map((classOption) => (
               <option key={classOption} value={classOption}>
                 {classOption}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Subject Dropdown */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">Subject</label>
+          <select
+            name="subject"
+            value={courseData.subject}
+            onChange={handleChange}
+            className="w-full border rounded px-4 py-2"
+            required
+          >
+            <option value="">Select Subject</option>
+            {subjectOptions.map((subjectOption) => (
+              <option key={subjectOption} value={subjectOption}>
+                {subjectOption}
               </option>
             ))}
           </select>

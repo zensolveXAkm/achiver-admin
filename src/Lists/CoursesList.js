@@ -3,7 +3,7 @@ import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const classOptions = [
-  "VIII", "IX", "X", "XI", "XII", "UPSC", "SSC", "BANKING", "CLAT", "CAT", "MAT", "XAT", "CUET", "GENERAL"
+  "VIII", "IX", "X", "XI", "XII", "COMPETITIVE EXAM", "GENERAL"
 ];
 
 const CoursesList = () => {

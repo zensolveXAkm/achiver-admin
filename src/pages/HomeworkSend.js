@@ -11,6 +11,7 @@ const HomeworkSend = () => {
     homeworkDate: "",
     dueDate: "",
     class: "VIII",
+    subject: "Science",
   });
   const [attachment, setAttachment] = useState(null);
 
@@ -54,6 +55,7 @@ const HomeworkSend = () => {
         homeworkDate: "",
         dueDate: "",
         class: "VIII",
+        subject: "Science",
       });
       setAttachment(null);
     } catch (error) {
@@ -119,13 +121,25 @@ const HomeworkSend = () => {
           onChange={handleChange}
           className="w-full p-2 border rounded"
         >
-          {["VIII", "IX", "X", "XI", "XII", "UPSC", "SSC", "BANKING", "CLAT", "CAT", "MAT", "XAT", "CUET", "GENERAL"].map(
+          {["VI", "VII", "VIII", "IX", "X", "XI", "XII", "COMPETITIVE EXAM", "GENERAL"].map(
             (cls, index) => (
               <option key={index} value={cls}>
                 {cls}
               </option>
             )
           )}
+        </select>
+        <select
+          name="subject"
+          value={homeworkData.subject}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        >
+          {["Science", "Maths", "Social Science", "English"].map((subject, index) => (
+            <option key={index} value={subject}>
+              {subject}
+            </option>
+          ))}
         </select>
         <button type="submit" className="bg-blue-600 text-white w-full p-2 rounded">
           Send Homework

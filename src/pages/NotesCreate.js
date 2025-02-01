@@ -8,13 +8,21 @@ const cloudinaryConfig = {
   uploadPreset: "tap-edu",
 };
 
+const classOptions = [
+  "VI", "VII", "VIII", "IX", "X", "XI", "XII", "COMPETITIVE EXAM", "GENERAL"
+];
+
+const subjectOptions = [
+  "Science", "Maths", "Social Science", "Hindi", "English", "Computer"
+];
+
 const NotesCreate = () => {
   const [noteData, setNoteData] = useState({
     topic: "",
     subject: "",
     description: "",
     remarks: "",
-    class: "", // Added class field
+    class: "",
   });
   const [attachment, setAttachment] = useState(null);
 
@@ -80,37 +88,40 @@ const NotesCreate = () => {
           />
         </div>
 
+        {/* Subject Dropdown */}
         <div>
           <label className="block mb-2">Subject</label>
-          <input
-            type="text"
+          <select
             name="subject"
             value={noteData.subject}
             onChange={handleChange}
             className="w-full border p-2 rounded"
             required
-          />
+          >
+            <option value="">Select a subject</option>
+            {subjectOptions.map((subject) => (
+              <option key={subject} value={subject}>
+                {subject}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
           <label className="block mb-2">Class</label>
-          <select name="class" value={noteData.class} onChange={handleChange} className="w-full border p-2 rounded" required>
+          <select
+            name="class"
+            value={noteData.class}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+            required
+          >
             <option value="">Select a class</option>
-            <option value="VIII">VIII</option>
-            <option value="IX">IX</option>
-            <option value="X">X</option>
-            <option value="XI">XI</option>
-            <option value="XII">XII</option>
-            <option value="UPSC">UPSC</option>
-            <option value="SSC">SSC</option>
-            <option value="BANKING">BANKING</option>
-            <option value="CLAT">CLAT</option>
-            <option value="CAT">CAT</option>
-            <option value="MAT">MAT</option>
-            <option value="XAT">XAT</option>
-            <option value="CUET">CUET</option>
-            <option value="GENERAL">General</option>
-
+            {classOptions.map((classOption) => (
+              <option key={classOption} value={classOption}>
+                {classOption}
+              </option>
+            ))}
           </select>
         </div>
 

@@ -6,6 +6,7 @@ const AddClassPage = () => {
   const [formData, setFormData] = useState({
     topic: "",
     class: "",
+    subject: "", // New field for subject
     startDate: "",
     startTime: "",
     endDate: "",
@@ -63,6 +64,7 @@ const AddClassPage = () => {
       setFormData({
         topic: "",
         class: "",
+        subject: "", // Reset subject field
         startDate: "",
         startTime: "",
         endDate: "",
@@ -103,20 +105,32 @@ const AddClassPage = () => {
           required
         >
           <option value="">Select a class</option>
+          <option value="VI">VI</option>
+          <option value="VII">VII</option>
           <option value="VIII">VIII</option>
           <option value="IX">IX</option>
           <option value="X">X</option>
           <option value="XI">XI</option>
           <option value="XII">XII</option>
-          <option value="UPSC">UPSC</option>
-          <option value="SSC">SSC</option>
-          <option value="BANKING">BANKING</option>
-          <option value="CLAT">CLAT</option>
-          <option value="CAT">CAT</option>
-          <option value="MAT">MAT</option>
-          <option value="XAT">XAT</option>
-          <option value="CUET">CUET</option>
-          <option value="GENERAL">General</option>
+          <option value="Competitive Exam">Competitive Exam</option>
+        </select>
+
+        {/* New Subject Dropdown */}
+        <label className="block mt-4 mb-2 font-semibold">Select Subject</label>
+        <select
+          name="subject"
+          value={formData.subject}
+          onChange={handleChange}
+          className="border p-2 w-full rounded"
+          required
+        >
+          <option value="">Select a subject</option>
+          <option value="Science">Science</option>
+          <option value="Maths">Maths</option>
+          <option value="Social Science">Social Science</option>
+          <option value="Hindi">Hindi</option>
+          <option value="English">English</option>
+          <option value="Computer">Computer</option>
         </select>
 
         <label className="block mt-4 mb-2 font-semibold">Start Date</label>
