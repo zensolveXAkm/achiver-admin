@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaRegStickyNote, FaPlusCircle, FaUpload, FaBars } from "react-icons/fa";
+import { FaHome, FaRegStickyNote, FaPlusCircle, FaBars, FaChalkboardTeacher } from "react-icons/fa";
 import Sidebar from "./Sidebar"; // Import your Sidebar component
 
 const Navbar = () => {
@@ -34,9 +34,9 @@ const Navbar = () => {
           <FaPlusCircle className="text-2xl" />
           <span className="text-sm">Add Course</span>
         </Link>
-        <Link to="/upload" className={`flex flex-col items-center ${getIconColor("/upload")}`}>
-          <FaUpload className="text-2xl" />
-          <span className="text-sm">Upload</span>
+        <Link to="/live" className={`flex flex-col items-center ${getIconColor("/live")}`}>
+          <FaChalkboardTeacher className="text-2xl" />
+          <span className="text-sm">Start Live</span>
         </Link>
         <button
           onClick={() => setSidebarOpen(true)}

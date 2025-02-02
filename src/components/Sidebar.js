@@ -39,7 +39,6 @@ const Sidebar = ({ closeSidebar }) => {
             { to: "/homework", label: "Homework", icon: <FaBookOpen /> },
             { to: "/add-quiz", label: "Add Quiz", icon: <FaPlusCircle /> },
             { to: "/admissions", label: "Admissions", icon: <FaUserCircle /> },
-            { to: "/live", label: "Start Live", icon: <FaChalkboardTeacher /> },
             { to: "/add-past-class", label: "Add Past Class", icon: <FaUpload /> },
             { to: "/classlist", label: "Class List", icon: <FaListAlt /> },
             { to: "/admittedlist", label: "Admitted Students", icon: <FaClipboardList /> },

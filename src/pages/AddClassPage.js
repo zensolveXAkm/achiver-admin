@@ -113,6 +113,8 @@ const AddClassPage = () => {
           <option value="XI">XI</option>
           <option value="XII">XII</option>
           <option value="Competitive Exam">Competitive Exam</option>
+          <option value="GENERAL">GENERAL</option>
+          
         </select>
 
         {/* New Subject Dropdown */}

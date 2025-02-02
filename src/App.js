@@ -12,7 +12,6 @@ import HomeworkTreeView from "./Lists/SubmittedHomeworkList";
 import AdmitPage from "./pages/AdmitPage";
 import PasswordProtection from "./components/PasswordProtection"; // Import the new component
 import UploadPage from "./pages/UploadPage"; // Import the new component
-import Error10 from "./components/404"; // Import the new component
 import ClassList from "./Lists/ClassList";
 import AdmittedStudents from "./Lists/AdmittedStudents";
 import StudentList from "./Lists/StudentList";
@@ -21,12 +20,14 @@ import CoursesList from "./Lists/CoursesList";
 import NotesList from "./Lists/NotesList";
 import PastClassesList from "./Lists/PastClassesList";
 import Error10 from "./components/404";
+import CloudinaryFileManager from "./components/CloudinaryFileManager";
 const App = () => {
   return (
     <PasswordProtection>
       <Router>
         <div className="min-h-screen bg-gray-100">
           <Routes>
+            <Route path="/files" element={<CloudinaryFileManager/>}/>
             <Route path="/homework" element={<HomeworkSend />} />
             <Route path="/notes" element={<NotesCreate />} />
             <Route path="/create-course" element={<CreateCourse />} />

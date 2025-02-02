@@ -5,8 +5,8 @@ import { collection, getDocs, deleteDoc, doc, updateDoc } from "firebase/firesto
 const ClassList = () => {
   const [liveClasses, setLiveClasses] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const [selectedClass, setSelectedClass] = useState(null); // Store selected class data for editing
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
   const [updatedClass, setUpdatedClass] = useState({
     topic: "",
     class: "",
@@ -33,11 +33,46 @@ const ClassList = () => {
     }
   };
 
+  // Delete image from Cloudinary
+  const deleteImageFromCloudinary = async (publicId) => {
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/dkzczonkz/image/destroy`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            public_id: publicId,
+            api_key: "588654794854165", // Replace with your Cloudinary API key
+            api_secret: "84S3yWtVQl971TujeXQl9RXuflM", // Replace with your Cloudinary API secret
+            timestamp: Math.floor(Date.now() / 1000),
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.result === "ok") {
+        console.log("Image deleted from Cloudinary");
+      } else {
+        console.error("Failed to delete image from Cloudinary:", data);
+      }
+    } catch (error) {
+      console.error("Error deleting image from Cloudinary:", error.message);
+    }
+  };
+
   // Handle class deletion
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, thumbnailPublicId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this class?");
     if (confirmDelete) {
       try {
+        // Delete image from Cloudinary
+        if (thumbnailPublicId) {
+          await deleteImageFromCloudinary(thumbnailPublicId);
+        }
+
+        // Delete document from Firestore
         await deleteDoc(doc(db, "liveClasses", id));
         alert("Class deleted successfully!");
         setLiveClasses(liveClasses.filter((liveClass) => liveClass.id !== id));
@@ -50,7 +85,7 @@ const ClassList = () => {
 
   // Handle opening the edit modal
   const handleEdit = (liveClass) => {
-    setSelectedClass(liveClass); // Set the class data to edit
+    setSelectedClass(liveClass);
     setUpdatedClass({
       topic: liveClass.topic,
       class: liveClass.class,
@@ -65,7 +100,7 @@ const ClassList = () => {
   // Handle modal close
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedClass(null); // Reset selected class when closing modal
+    setSelectedClass(null);
   };
 
   // Handle updating class data
@@ -73,9 +108,9 @@ const ClassList = () => {
     if (selectedClass) {
       try {
         const classRef = doc(db, "liveClasses", selectedClass.id);
-        await updateDoc(classRef, updatedClass); // Update Firestore document
+        await updateDoc(classRef, updatedClass);
         alert("Class updated successfully!");
-        fetchLiveClasses(); // Refetch the classes after update
+        fetchLiveClasses();
         closeModal();
       } catch (error) {
         console.error("Error updating class: ", error.message);
@@ -130,7 +165,7 @@ const ClassList = () => {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(liveClass.id)}
+                  onClick={() => handleDelete(liveClass.id, liveClass.thumbnailPublicId)}
                   className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                 >
                   Delete
