@@ -20,7 +20,7 @@ import QuizListPage from "./Lists/QuizListPage";
 import CoursesList from "./Lists/CoursesList";
 import NotesList from "./Lists/NotesList";
 import PastClassesList from "./Lists/PastClassesList";
-
+import Error10 from "./components/404";
 const App = () => {
   return (
     <PasswordProtection>
@@ -44,6 +44,7 @@ const App = () => {
             <Route path="/courseslist" element={<CoursesList/>}/>
             <Route path="/notelist" element={<NotesList/>}/>
             <Route path="/Pastlist" element={<PastClassesList/>}/>
+            <Route path="*" element={<Error10/>}/>
           </Routes>
         </div>
           <Navbar />
