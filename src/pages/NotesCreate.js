@@ -25,6 +25,8 @@ const NotesCreate = () => {
     class: "",
   });
   const [attachment, setAttachment] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleChange = (e) => {
     setNoteData({ ...noteData, [e.target.name]: e.target.value });
@@ -36,6 +38,9 @@ const NotesCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setUploadProgress(0);
+
     try {
       let attachmentUrl = "";
       if (attachment) {
@@ -46,7 +51,15 @@ const NotesCreate = () => {
 
         const response = await axios.post(
           `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/upload`,
-          formData
+          formData,
+          {
+            onUploadProgress: (progressEvent) => {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              setUploadProgress(percentCompleted);
+            },
+          }
         );
         attachmentUrl = response.data.secure_url;
       }
@@ -68,6 +81,9 @@ const NotesCreate = () => {
       setAttachment(null);
     } catch (error) {
       alert("Error adding note: " + error.message);
+    } finally {
+      setIsSubmitting(false);
+      setUploadProgress(0);
     }
   };
 
@@ -88,7 +104,6 @@ const NotesCreate = () => {
           />
         </div>
 
-        {/* Subject Dropdown */}
         <div>
           <label className="block mb-2">Subject</label>
           <select
@@ -152,8 +167,21 @@ const NotesCreate = () => {
           />
         </div>
 
-        <button type="submit" className="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700">
-          Submit Note
+        {isSubmitting && (
+          <div className="w-full bg-gray-200 rounded-full h-4 mt-4">
+            <div
+              className="bg-blue-600 h-4 rounded-full"
+              style={{ width: `${uploadProgress}%` }}
+            ></div>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Submitting..." : "Submit Note"}
         </button>
       </form>
     </div>
